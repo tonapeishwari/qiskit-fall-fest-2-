@@ -303,6 +303,103 @@
             font-weight: 500;
         }
 
+        /* Registration & Badges Section */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .badge-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 242, 254, 0.1);
+        }
+
+        .badge-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 242, 254, 0.08);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .badge-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Hover Tooltip Overlay */
+        .badge-tooltip {
+            position: absolute;
+            inset: 0;
+            background: rgba(3, 6, 13, 0.95);
+            border-radius: 16px;
+            border: 1px solid var(--accent-cyan);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .badge-card:hover .badge-tooltip {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .badge-tooltip h4 {
+            font-family: var(--font-heading);
+            color: var(--accent-cyan);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .badge-tooltip ul {
+            list-style: none;
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .badge-tooltip ul li::before {
+            content: "✦ ";
+            color: var(--accent-cyan);
+        }
+
         /* Bloch Sphere Container */
         .interactive-bloch {
             background: var(--card-bg);
@@ -515,6 +612,7 @@
     <div class="nav-overlay" id="navOverlay">
         <ul class="nav-links">
             <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+            <li><a href="#register" onclick="toggleMenu()">Registration & Badges</a></li>
             <li><a href="#haqthon" onclick="toggleMenu()">HaQthon</a></li>
             <li><a href="#schedule" onclick="toggleMenu()">Schedule</a></li>
             <li><a href="#speakers" onclick="toggleMenu()">Speakers</a></li>
@@ -575,6 +673,63 @@
             <p style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: 0 auto;">
                 Across the festival, participants move from first circuits to real hardware through workshops, talks, and the HaQthon challenge &mdash; open to newcomers and experienced researchers alike.
             </p>
+        </section>
+
+        <section id="register">
+            <div class="section-header">
+                <span class="tag">JOIN THE EVENT</span>
+                <h2>Registration & Digital Badges</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Choose your track, register, and earn verifiable IBM Qiskit digital credentials.
+                </p>
+            </div>
+
+            <div class="badge-grid">
+                <div class="badge-card">
+                    <div class="badge-icon">&#127897;</div>
+                    <h3>General Attendee</h3>
+                    <p>Access keynotes, intro talks, and public live streams throughout the festival.</p>
+                    <span class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">Register Free</span>
+                    <div class="badge-tooltip">
+                        <h4>Attendee Perks</h4>
+                        <ul>
+                            <li>Access to virtual talks & panels</li>
+                            <li>Digital Certificate of Participation</li>
+                            <li>Qiskit community network access</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">&#128187;</div>
+                    <h3>Workshop Track</h3>
+                    <p>Hands-on Qiskit coding sessions with mentors and live hardware access.</p>
+                    <span class="btn btn-purple" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">Apply for Workshop</span>
+                    <div class="badge-tooltip">
+                        <h4>Workshop Perks</h4>
+                        <ul>
+                            <li>Hands-on coding with IBM Qiskit</li>
+                            <li>Execution on IBM Quantum hardware</li>
+                            <li>Verifiable Digital Badge upon completion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="badge-card">
+                    <div class="badge-icon">&#9881;</div>
+                    <h3>HaQthon Hacker</h3>
+                    <p>Compete in the flagship hackathon, solve quantum problems, and win prizes.</p>
+                    <span class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">Join Hackathon</span>
+                    <div class="badge-tooltip">
+                        <h4>Hacker Perks</h4>
+                        <ul>
+                            <li>Exclusive HaQthon mentor access</li>
+                            <li>Cash prizes & swag for top teams</li>
+                            <li>IBM Quantum HaQthon Winner/Finalist Badge</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="haqthon">
@@ -751,166 +906,4 @@
                         <div style="font-size: 1.2rem; color: var(--accent-cyan);">&#128188;</div>
                         <div>
                             <div class="collab-name">LinkedIn</div>
-                            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary);">COMING SOON</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="arena">
-            <div class="section-header">
-                <span class="tag">PLAY THE PHYSICS</span>
-                <h2>Quantum Arena</h2>
-                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
-                    Light, competitive challenges running alongside the main programme.
-                </p>
-            </div>
-            <div class="arena-grid">
-                <div class="game-card">
-                    <div class="game-icon">&#127918;</div>
-                    <h3>Circuit Puzzles</h3>
-                    <p>Timed gate-sequence challenges that reward the shortest correct circuit.</p>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127918;</div>
-                    <h3>Entanglement Duels</h3>
-                    <p>Two-player rounds built around measurement and correlation.</p>
-                </div>
-                <div class="game-card">
-                    <div class="game-icon">&#127918;</div>
-                    <h3>Daily Qubit</h3>
-                    <p>A short quantum brain-teaser posted through the festival.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <h4>Qiskit Fall Fest</h4>
-        <p>A decade of quantum on cloud &bull; Pune, India</p>
-        <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
-            IISER Pune &bull; MIT World Peace University &bull; MMCOE<br>
-            ORGANISED IN PARTNERSHIP WITH IBM QISKIT
-        </p>
-    </footer>
-
-    <script>
-        // Toggle Mobile Navigation Overlay
-        function toggleMenu() {
-            const overlay = document.getElementById('navOverlay');
-            overlay.classList.toggle('active');
-        }
-        document.getElementById('menuBtn').addEventListener('click', toggleMenu);
-
-        // Three.js Background Particle Stars
-        const bgContainer = document.getElementById('canvas-container');
-        const bgScene = new THREE.Scene();
-        const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        bgRenderer.setSize(window.innerWidth, window.innerHeight);
-        bgContainer.appendChild(bgRenderer.domElement);
-
-        const starsGeometry = new THREE.BufferGeometry();
-        const starCount = 300;
-        const starPos = new Float32Array(starCount * 3);
-
-        for(let i = 0; i < starCount * 3; i++) {
-            starPos[i] = (Math.random() - 0.5) * 15;
-        }
-
-        starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-        const starsMaterial = new THREE.PointsMaterial({
-            color: 0x00f2fe,
-            size: 0.02,
-            transparent: true,
-            opacity: 0.5
-        });
-
-        const starField = new THREE.Points(starsGeometry, starsMaterial);
-        bgScene.add(starField);
-        bgCamera.position.z = 5;
-
-        // Interactive Bloch Sphere Scene
-        const blochContainer = document.getElementById('bloch-container');
-        const blochScene = new THREE.Scene();
-        const blochCamera = new THREE.PerspectiveCamera(45, blochContainer.clientWidth / blochContainer.clientHeight, 0.1, 100);
-        const blochRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-
-        blochRenderer.setSize(blochContainer.clientWidth, blochContainer.clientHeight);
-        blochContainer.appendChild(blochRenderer.domElement);
-
-        const sphereGroup = new THREE.Group();
-        
-        // Sphere Wireframe
-        const sphereGeo = new THREE.SphereGeometry(1.2, 24, 24);
-        const sphereMat = new THREE.MeshBasicMaterial({
-            color: 0x8a2be2,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.25
-        });
-        const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
-        sphereGroup.add(sphereMesh);
-
-        // State Vector Arrow
-        const arrowDir = new THREE.Vector3(0.5, 0.8, 0.3).normalize();
-        const arrowOrigin = new THREE.Vector3(0, 0, 0);
-        const arrowHelper = new THREE.ArrowHelper(arrowDir, arrowOrigin, 1.2, 0x00f2fe, 0.2, 0.1);
-        sphereGroup.add(arrowHelper);
-
-        blochScene.add(sphereGroup);
-        blochCamera.position.z = 3.5;
-
-        // Mouse Drag Rotation for Bloch Sphere
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-
-        blochContainer.addEventListener('mousedown', () => isDragging = true);
-        blochContainer.addEventListener('mouseup', () => isDragging = false);
-        blochContainer.addEventListener('mouseleave', () => isDragging = false);
-
-        blochContainer.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                const deltaMove = {
-                    x: e.clientX - previousMousePosition.x,
-                    y: e.clientY - previousMousePosition.y
-                };
-
-                sphereGroup.rotation.y += deltaMove.x * 0.01;
-                sphereGroup.rotation.x += deltaMove.y * 0.01;
-            }
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-        });
-
-        // Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Subtle rotation for background field
-            starField.rotation.y += 0.0005;
-
-            // Idle rotation for Bloch Sphere when not dragged
-            if (!isDragging) {
-                sphereGroup.rotation.y += 0.003;
-            }
-
-            bgRenderer.render(bgScene, bgCamera);
-            blochRenderer.render(blochScene, blochCamera);
-        }
-        animate();
-
-        // Responsive Resize Handler
-        window.addEventListener('resize', () => {
-            bgCamera.aspect = window.innerWidth / window.innerHeight;
-            bgCamera.updateProjectionMatrix();
-            bgRenderer.setSize(window.innerWidth, window.innerHeight);
-
-            blochCamera.aspect = blochContainer.clientWidth / blochContainer.clientHeight;
-            blochCamera.updateProjectionMatrix();
-            blochRenderer.setSize(blochContainer.clientWidth, blochContainer.clientHeight);
-        });
-    </script>
-</body>
-</html>
+                            <div style="font-family: var
