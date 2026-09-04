@@ -73,12 +73,6 @@
             color: var(--text-primary);
         }
 
-        .brand img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-        }
-
         .menu-toggle {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--card-border);
@@ -199,10 +193,15 @@
             letter-spacing: 1px;
         }
 
-        .host-institutes span {
+        .host-institutes a {
             color: var(--text-primary);
             text-decoration: underline;
             text-underline-offset: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .host-institutes a:hover {
+            color: var(--accent-cyan);
         }
 
         /* Info Grid Cards */
@@ -397,8 +396,9 @@
         }
 
         .collab-card:hover {
-            border-color: rgba(255, 255, 255, 0.25);
+            border-color: rgba(0, 242, 254, 0.4);
             transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.05);
         }
 
         .collab-info {
@@ -417,6 +417,11 @@
             justify-content: center;
             padding: 4px;
             overflow: hidden;
+            flex-shrink: 0;
+            color: #000000;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-align: center;
         }
 
         .collab-logo img {
@@ -532,7 +537,9 @@
             <div class="subtitle">IN PARTNERSHIP WITH IBM Qiskit</div>
             <h1>Qiskit Fall Fest: A decade of quantum on cloud</h1>
             <div class="host-institutes">
-                <span>IISER</span> &times; <span>MIT WPU</span> &times; <span>MMCOE</span>
+                <a href="https://www.iiserpune.ac.in" target="_blank" rel="noopener">IISER</a> &times; 
+                <a href="https://mitwpu.edu.in" target="_blank" rel="noopener">MIT WPU</a> &times; 
+                <a href="https://mmcoe.edu.in" target="_blank" rel="noopener">MMCOE</a>
             </div>
 
             <div class="info-grid">
@@ -673,46 +680,46 @@
                 <h2>Collaboration</h2>
             </div>
             <div class="collab-grid">
-                <a href="#" class="collab-card">
+                <a href="https://www.iiserpune.ac.in" target="_blank" rel="noopener" class="collab-card">
                     <div class="collab-info">
                         <div class="collab-logo">
-                            <img src="image_a9c747.png" alt="IISER Pune Logo">
+                            <img src="iiser-logo.png" alt="IISER" onerror="this.style.display='none'; this.parentNode.innerText='IISER';">
                         </div>
                         <span class="collab-name">IISER Pune</span>
                     </div>
                     <span class="arrow-icon">&#x2197;</span>
                 </a>
-                <a href="#" class="collab-card">
+                <a href="https://mitwpu.edu.in" target="_blank" rel="noopener" class="collab-card">
                     <div class="collab-info">
                         <div class="collab-logo">
-                            <img src="image_a9c7be.png" alt="MIT WPU Logo">
+                            <img src="mitwpu-logo.png" alt="MIT" onerror="this.style.display='none'; this.parentNode.innerText='MIT';">
                         </div>
                         <span class="collab-name">MIT World Peace University</span>
                     </div>
                     <span class="arrow-icon">&#x2197;</span>
                 </a>
-                <a href="#" class="collab-card">
+                <a href="https://mmcoe.edu.in" target="_blank" rel="noopener" class="collab-card">
                     <div class="collab-info">
                         <div class="collab-logo">
-                            <img src="image_a9c709.jpg" alt="MMCOE Logo">
+                            <img src="mmcoe-logo.jpg" alt="MMCOE" onerror="this.style.display='none'; this.parentNode.innerText='MMCOE';">
                         </div>
                         <span class="collab-name">MMCOE</span>
                     </div>
                     <span class="arrow-icon">&#x2197;</span>
                 </a>
-                <a href="#" class="collab-card">
+                <a href="https://www.quantech.org.in" target="_blank" rel="noopener" class="collab-card">
                     <div class="collab-info">
                         <div class="collab-logo">
-                            <img src="image_a9c768.png" alt="I-HUB Quantum Logo">
+                            <img src="ihub-logo.png" alt="I-HUB" onerror="this.style.display='none'; this.parentNode.innerText='I-HUB';">
                         </div>
                         <span class="collab-name">I-HUB Quantum Technology Foundation</span>
                     </div>
                     <span class="arrow-icon">&#x2197;</span>
                 </a>
-                <a href="#" class="collab-card">
+                <a href="https://www.ibm.com/quantum" target="_blank" rel="noopener" class="collab-card">
                     <div class="collab-info">
                         <div class="collab-logo">
-                            <img src="IBM_Quantum_logotype_pos_CMYK.jpg" alt="IBM Quantum Logo">
+                            <img src="ibm-logo.jpg" alt="IBM" onerror="this.style.display='none'; this.parentNode.innerText='IBM';">
                         </div>
                         <span class="collab-name">IBM Quantum</span>
                     </div>
