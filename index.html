@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qiskit Fall Fest 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #03060d;
+            --card-bg: rgba(13, 19, 33, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #00f2fe;
+            --accent-purple: #8a2be2;
+            --accent-glow: rgba(0, 242, 254, 0.15);
+            --font-heading: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            background: rgba(3, 6, 13, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .menu-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* Fullscreen Navigation Overlay */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 2rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Layout Container */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 8rem 1.5rem 4rem;
+        }
+
+        section {
+            margin-bottom: 7rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .fest-badge {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            font-weight: 500;
+            line-height: 1.15;
+            background: linear-gradient(180deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .host-institutes {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .host-institutes span {
+            color: var(--text-primary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* Info Grid Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .info-card .label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Action Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 0.85rem 1.75rem;
+            border-radius: 30px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            color: var(--accent-cyan);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-purple {
+            background: #8b5cf6;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-purple:hover {
+            background: #7c3aed;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Section Headings */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header .tag {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 500;
+        }
+
+        /* Bloch Sphere Container */
+        .interactive-bloch {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        #bloch-container {
+            width: 100%;
+            height: 280px;
+            margin: 0 auto;
+            cursor: grab;
+        }
+
+        .bloch-instruction {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Schedule Timeline */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .schedule-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.5rem 2rem;
+            position: relative;
+        }
+
+        .schedule-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent-cyan);
+            border-top-left-radius: 14px;
+            border-bottom-left-radius: 14px;
+        }
+
+        .schedule-meta {
+            display: flex;
+            gap: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Collaboration Grid */
+        .collab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .collab-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .collab-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .collab-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .collab-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            overflow: hidden;
+        }
+
+        .collab-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .collab-name {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .arrow-icon {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Quantum Arena Games Grid */
+        .arena-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .game-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 242, 254, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .game-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--card-border);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        footer h4 {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <nav>
+        <div class="brand">
+            <svg class="fest-logo" width="32" height="32" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#00f2fe" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="40" ry="15" fill="none" stroke="#8a2be2" stroke-width="2" transform="rotate(-30 50 50)"/>
+                <circle cx="50" cy="50" r="4" fill="#00f2fe"/>
+            </svg>
+            Fall Fest
+        </div>
+        <button class="menu-toggle" id="menuBtn" aria-label="Toggle Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+    </nav>
+
+    <div class="nav-overlay" id="navOverlay">
+        <ul class="nav-links">
+            <li><a href="#home" onclick="toggleMenu()">Home</a></li>
+            <li><a href="#haqthon" onclick="toggleMenu()">HaQthon</a></li>
+            <li><a href="#schedule" onclick="toggleMenu()">Schedule</a></li>
+            <li><a href="#speakers" onclick="toggleMenu()">Speakers</a></li>
+            <li><a href="#collaboration" onclick="toggleMenu()">Collaboration</a></li>
+            <li><a href="#social" onclick="toggleMenu()">Social Media</a></li>
+            <li><a href="#arena" onclick="toggleMenu()">Quantum Arena</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <section id="home" class="hero">
+            <svg class="fest-badge" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#8a2be2" stroke-width="2" transform="rotate(-25 50 50)"/>
+                <circle cx="20" cy="35" r="3" fill="#00f2fe"/>
+                <circle cx="80" cy="65" r="3" fill="#00f2fe"/>
+                <line x1="20" y1="35" x2="80" y2="65" stroke="rgba(0,242,254,0.4)" stroke-dasharray="2 2"/>
+            </svg>
+
+            <div class="subtitle">IN PARTNERSHIP WITH IBM Qiskit</div>
+            <h1>Qiskit Fall Fest: A decade of quantum on cloud</h1>
+            <div class="host-institutes">
+                <span>IISER</span> &times; <span>MIT WPU</span> &times; <span>MMCOE</span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="label">WHEN</div>
+                    <div class="value">October 2026</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">WHERE</div>
+                    <div class="value">Pune, India</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">FORMAT</div>
+                    <div class="value">Hybrid</div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="#register" class="btn btn-outline">Register for event &rarr;</a>
+                <a href="#haqthon" class="btn btn-purple">Explore HaQthon &rarr;</a>
+                <a href="#arena" class="btn btn-outline">Quantum Arena &#x2197;</a>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="section-header">
+                <span class="tag">ABOUT</span>
+                <h2>About the event</h2>
+            </div>
+            <p style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: 0 auto 1.5rem;">
+                Qiskit Fall Fest is a student-led celebration of quantum computing held on campuses worldwide in partnership with IBM Quantum. The Pune edition is hosted jointly by IISER Pune, MIT World Peace University, and MMCOE.
+            </p>
+            <p style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: 0 auto;">
+                Across the festival, participants move from first circuits to real hardware through workshops, talks, and the HaQthon challenge &mdash; open to newcomers and experienced researchers alike.
+            </p>
+        </section>
+
+        <section id="haqthon">
+            <div class="section-header">
+                <span class="tag">FLAGSHIP CHALLENGE</span>
+                <h2>HaQthon</h2>
+            </div>
+            <div class="interactive-bloch">
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    A quantum hackathon for students and researchers across the three host institutes. Teams prototype on real quantum hardware and simulators using Qiskit &mdash; no prior quantum experience required.
+                </p>
+                <div style="margin-bottom: 1.5rem;">
+                    <span class="btn btn-outline" style="cursor: default; opacity: 0.8;">Registration opening soon</span>
+                </div>
+
+                <div id="bloch-container"></div>
+                <div class="bloch-instruction">Drag or tap the sphere to change the state</div>
+
+                <div class="info-grid" style="margin-top: 2rem;">
+                    <div class="info-card">
+                        <div class="label">DATES</div>
+                        <div class="value">To be announced</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">MODE</div>
+                        <div class="value">To be announced</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">TEAM SIZE</div>
+                        <div class="value">To be announced</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">ELIGIBILITY</div>
+                        <div class="value">To be announced</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule">
+            <div class="section-header">
+                <span class="tag">TIMELINE</span>
+                <h2>Schedule</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Three days of talks, hands-on workshops and building. Exact timings are being finalised.
+                </p>
+            </div>
+
+            <div class="schedule-list">
+                <div class="schedule-card">
+                    <div class="schedule-meta"><span>DAY 1</span> &bull; <span>TO BE ANNOUNCED</span></div>
+                    <h3>Opening & Keynote</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">By To be announced</p>
+                    <p>Festival inauguration and an opening keynote on the decade of quantum on the cloud.</p>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-meta"><span>DAY 1</span> &bull; <span>TO BE ANNOUNCED</span></div>
+                    <h3>Qiskit Workshop</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">By To be announced</p>
+                    <p>Hands-on session guiding participants from fundamental quantum gates to executing circuits on IBM Quantum hardware.</p>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-meta"><span>DAY 2</span> &bull; <span>TO BE ANNOUNCED</span></div>
+                    <h3>Faculty Development Programme</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">By To be announced</p>
+                    <p>Session for educators on bringing quantum computing into the classroom.</p>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-meta"><span>DAY 2</span> &bull; <span>TO BE ANNOUNCED</span></div>
+                    <h3>HaQthon Kickoff</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">By To be announced</p>
+                    <p>Problem statements, team formation and mentor allocation.</p>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-meta"><span>DAY 3</span> &bull; <span>TO BE ANNOUNCED</span></div>
+                    <h3>Project Showcase & Closing</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">By To be announced</p>
+                    <p>Team demos, judging and the closing ceremony.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="speakers">
+            <div class="section-header">
+                <span class="tag">VOICES</span>
+                <h2>Speakers</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Researchers and practitioners from academia and industry. Line-up announced soon.
+                </p>
+            </div>
+            <div class="interactive-bloch" style="padding: 3rem 1.5rem;">
+                <div style="font-size: 1.5rem; color: var(--accent-cyan); margin-bottom: 1rem;">&#127897;</div>
+                <h3 style="font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 0.5rem;">Speaker line-up coming soon</h3>
+                <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto;">
+                    We are confirming quantum researchers, IBM Quantum advocates and faculty from the host institutes. Announcements will appear here first.
+                </p>
+            </div>
+        </section>
+
+        <section id="collaboration">
+            <div class="section-header">
+                <span class="tag">TOGETHER</span>
+                <h2>Collaboration</h2>
+            </div>
+            <div class="collab-grid">
+                <a href="#" class="collab-card">
+                    <div class="collab-info">
+                        <div class="collab-logo">
+                            <img src="image_a9c747.png" alt="IISER Pune Logo">
+                        </div>
+                        <span class="collab-name">IISER Pune</span>
+                    </div>
+                    <span class="arrow-icon">&#x2197;</span>
+                </a>
+                <a href="#" class="collab-card">
+                    <div class="collab-info">
+                        <div class="collab-logo">
+                            <img src="image_a9c7be.png" alt="MIT WPU Logo">
+                        </div>
+                        <span class="collab-name">MIT World Peace University</span>
+                    </div>
+                    <span class="arrow-icon">&#x2197;</span>
+                </a>
+                <a href="#" class="collab-card">
+                    <div class="collab-info">
+                        <div class="collab-logo">
+                            <img src="image_a9c709.jpg" alt="MMCOE Logo">
+                        </div>
+                        <span class="collab-name">MMCOE</span>
+                    </div>
+                    <span class="arrow-icon">&#x2197;</span>
+                </a>
+                <a href="#" class="collab-card">
+                    <div class="collab-info">
+                        <div class="collab-logo">
+                            <img src="image_a9c768.png" alt="I-HUB Quantum Logo">
+                        </div>
+                        <span class="collab-name">I-HUB Quantum Technology Foundation</span>
+                    </div>
+                    <span class="arrow-icon">&#x2197;</span>
+                </a>
+                <a href="#" class="collab-card">
+                    <div class="collab-info">
+                        <div class="collab-logo">
+                            <img src="IBM_Quantum_logotype_pos_CMYK.jpg" alt="IBM Quantum Logo">
+                        </div>
+                        <span class="collab-name">IBM Quantum</span>
+                    </div>
+                    <span class="arrow-icon">&#x2197;</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="social">
+            <div class="section-header">
+                <span class="tag">STAY IN THE LOOP</span>
+                <h2>Social Media</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Announcements, speaker reveals and HaQthon updates land on our channels first.
+                </p>
+            </div>
+            <div class="collab-grid">
+                <div class="collab-card" style="cursor: default;">
+                    <div class="collab-info">
+                        <div style="font-size: 1.2rem; color: var(--accent-cyan);">&#128247;</div>
+                        <div>
+                            <div class="collab-name">Instagram</div>
+                            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary);">COMING SOON</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="collab-card" style="cursor: default;">
+                    <div class="collab-info">
+                        <div style="font-size: 1.2rem; color: var(--accent-cyan);">&#128188;</div>
+                        <div>
+                            <div class="collab-name">LinkedIn</div>
+                            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary);">COMING SOON</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="arena">
+            <div class="section-header">
+                <span class="tag">PLAY THE PHYSICS</span>
+                <h2>Quantum Arena</h2>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.5rem;">
+                    Light, competitive challenges running alongside the main programme.
+                </p>
+            </div>
+            <div class="arena-grid">
+                <div class="game-card">
+                    <div class="game-icon">&#127918;</div>
+                    <h3>Circuit Puzzles</h3>
+                    <p>Timed gate-sequence challenges that reward the shortest correct circuit.</p>
+                </div>
+                <div class="game-card">
+                    <div class="game-icon">&#127918;</div>
+                    <h3>Entanglement Duels</h3>
+                    <p>Two-player rounds built around measurement and correlation.</p>
+                </div>
+                <div class="game-card">
+                    <div class="game-icon">&#127918;</div>
+                    <h3>Daily Qubit</h3>
+                    <p>A short quantum brain-teaser posted through the festival.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h4>Qiskit Fall Fest</h4>
+        <p>A decade of quantum on cloud &bull; Pune, India</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-secondary);">
+            IISER Pune &bull; MIT World Peace University &bull; MMCOE<br>
+            ORGANISED IN PARTNERSHIP WITH IBM QISKIT
+        </p>
+    </footer>
+
+    <script>
+        // Toggle Mobile Navigation Overlay
+        function toggleMenu() {
+            const overlay = document.getElementById('navOverlay');
+            overlay.classList.toggle('active');
+        }
+        document.getElementById('menuBtn').addEventListener('click', toggleMenu);
+
+        // Three.js Background Particle Stars
+        const bgContainer = document.getElementById('canvas-container');
+        const bgScene = new THREE.Scene();
+        const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+        bgContainer.appendChild(bgRenderer.domElement);
+
+        const starsGeometry = new THREE.BufferGeometry();
+        const starCount = 300;
+        const starPos = new Float32Array(starCount * 3);
+
+        for(let i = 0; i < starCount * 3; i++) {
+            starPos[i] = (Math.random() - 0.5) * 15;
+        }
+
+        starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starsMaterial = new THREE.PointsMaterial({
+            color: 0x00f2fe,
+            size: 0.02,
+            transparent: true,
+            opacity: 0.5
+        });
+
+        const starField = new THREE.Points(starsGeometry, starsMaterial);
+        bgScene.add(starField);
+        bgCamera.position.z = 5;
+
+        // Interactive Bloch Sphere Scene
+        const blochContainer = document.getElementById('bloch-container');
+        const blochScene = new THREE.Scene();
+        const blochCamera = new THREE.PerspectiveCamera(45, blochContainer.clientWidth / blochContainer.clientHeight, 0.1, 100);
+        const blochRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        blochRenderer.setSize(blochContainer.clientWidth, blochContainer.clientHeight);
+        blochContainer.appendChild(blochRenderer.domElement);
+
+        const sphereGroup = new THREE.Group();
+        
+        // Sphere Wireframe
+        const sphereGeo = new THREE.SphereGeometry(1.2, 24, 24);
+        const sphereMat = new THREE.MeshBasicMaterial({
+            color: 0x8a2be2,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.25
+        });
+        const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+        sphereGroup.add(sphereMesh);
+
+        // State Vector Arrow
+        const arrowDir = new THREE.Vector3(0.5, 0.8, 0.3).normalize();
+        const arrowOrigin = new THREE.Vector3(0, 0, 0);
+        const arrowHelper = new THREE.ArrowHelper(arrowDir, arrowOrigin, 1.2, 0x00f2fe, 0.2, 0.1);
+        sphereGroup.add(arrowHelper);
+
+        blochScene.add(sphereGroup);
+        blochCamera.position.z = 3.5;
+
+        // Mouse Drag Rotation for Bloch Sphere
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        blochContainer.addEventListener('mousedown', () => isDragging = true);
+        blochContainer.addEventListener('mouseup', () => isDragging = false);
+        blochContainer.addEventListener('mouseleave', () => isDragging = false);
+
+        blochContainer.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: e.clientX - previousMousePosition.x,
+                    y: e.clientY - previousMousePosition.y
+                };
+
+                sphereGroup.rotation.y += deltaMove.x * 0.01;
+                sphereGroup.rotation.x += deltaMove.y * 0.01;
+            }
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Subtle rotation for background field
+            starField.rotation.y += 0.0005;
+
+            // Idle rotation for Bloch Sphere when not dragged
+            if (!isDragging) {
+                sphereGroup.rotation.y += 0.003;
+            }
+
+            bgRenderer.render(bgScene, bgCamera);
+            blochRenderer.render(blochScene, blochCamera);
+        }
+        animate();
+
+        // Responsive Resize Handler
+        window.addEventListener('resize', () => {
+            bgCamera.aspect = window.innerWidth / window.innerHeight;
+            bgCamera.updateProjectionMatrix();
+            bgRenderer.setSize(window.innerWidth, window.innerHeight);
+
+            blochCamera.aspect = blochContainer.clientWidth / blochContainer.clientHeight;
+            blochCamera.updateProjectionMatrix();
+            blochRenderer.setSize(blochContainer.clientWidth, blochContainer.clientHeight);
+        });
+    </script>
+</body>
+</html>
